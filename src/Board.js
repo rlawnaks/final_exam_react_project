@@ -1,23 +1,22 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom"
+import { Context } from "./App";
 
 function Board() {
 
-    const [list , setList] = useState([]);
-    const location = useLocation();
-    const navigate = useNavigate();
+    const context = useContext(Context)
+    const navigate = useNavigate()
+    console.log(context)
 
-    let state = location.state;
-    list.push(state);
-    useEffect(() => {
-        setList(list);
-        console.log(list);
-    })
+    let board = context.board
 
     let content = [];
     let tmp;
-    for(let i = 0; i < list.length; i++) {
-        tmp = <li id={`post${i}`}>{list[i].title}</li>
+    for(let i = 0; i < board.length; i++) {
+        tmp = <li key={`${board[i].id}`} id={`post${board[i].id}`} onClick={(e) => {
+            e.preventDefault()
+            navigate("/detail", {state: {board: board[i], index: i}})
+        }}>{board[i].title}</li>
         content.push(tmp);
     }
 
@@ -28,7 +27,7 @@ function Board() {
             </ul>
             <button onClick={(e) => {
                 e.preventDefault();
-                navigate("/", {state: {list: list}})
+                navigate("/")
             }}>Home</button>
         </div>
     )
